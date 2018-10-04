@@ -1,0 +1,264 @@
+<?php
+namespace moxuandi\kindeditor;
+
+use Yii;
+use yii\base\Action;
+use yii\helpers\FileHelper;
+use yii\helpers\Json;
+use moxuandi\helpers\Uploader;
+
+/**
+ * KindEditor 接收上传图片控制器.
+ *
+ * @author  zhangmoxuan <1104984259@qq.com>
+ * @link  http://www.zhangmoxuan.com
+ * @QQ  1104984259
+ * @Date  2017-12-23
+ * @see http://kindeditor.net
+ */
+class KindEditorUpload extends Action
+{
+    /**
+     * @var array 上传配置接口
+     */
+    public $config = [];
+    /**
+     * @var string 上传类型, 可能值有: 'image', 'flash', 'media', 'file'
+     */
+    protected $dir;
+
+
+    public function init()
+    {
+        parent::init();
+        Yii::$app->request->enableCsrfValidation = false;  // 关闭csrf
+        $_config = require(__DIR__ . '/config.php');  // 加载默认上传配置
+        $this->config = array_merge($_config, $this->config);
+        $this->dir = trim(Yii::$app->request->get('dir'));
+    }
+
+    public function run()
+    {
+        switch(Yii::$app->request->get('action')){
+            case 'fileManagerJson': self::actionList(); break;
+            case 'uploadJson': self::actionUpload(); break;
+            default: break;
+        }
+    }
+
+    /**
+     * 处理上传
+     */
+    private function actionUpload()
+    {
+        switch($this->dir){
+            case 'image':  // 图片
+                if(Yii::$app->request->post('dialogImage')){
+                    $config = [
+                        'maxSize' => $this->config['dialogImageMaxSize'],
+                        'allowFiles' => $this->config['dialogImageAllowFiles'],
+                        'pathFormat' => $this->config['dialogImagePathFormat'],
+                        'thumbStatus' => $this->config['dialogThumbStatus'],
+                        'thumbWidth' => $this->config['dialogThumbWidth'],
+                        'thumbHeight' => $this->config['dialogThumbHeight'],
+                        'thumbMode' => $this->config['dialogThumbMode'],
+                    ];
+                }else{
+                    $config = [
+                        'maxSize' => $this->config['imageMaxSize'],
+                        'allowFiles' => $this->config['imageAllowFiles'],
+                        'pathFormat' => $this->config['imagePathFormat'],
+                        'thumbStatus' => $this->config['thumbStatus'],
+                        'thumbWidth' => $this->config['thumbWidth'],
+                        'thumbHeight' => $this->config['thumbHeight'],
+                        'thumbMode' => $this->config['thumbMode'],
+                    ];
+                }
+                break;
+            case 'flash':  // Flash
+                $config = [
+                    'maxSize' => $this->config['flashMaxSize'],
+                    'allowFiles' => $this->config['flashAllowFiles'],
+                    'pathFormat' => $this->config['flashPathFormat'],
+                ];
+                break;
+            case 'media':  // 视音频
+                $config = [
+                    'maxSize' => $this->config['mediaMaxSize'],
+                    'allowFiles' => $this->config['mediaAllowFiles'],
+                    'pathFormat' => $this->config['mediaPathFormat'],
+                ];
+                break;
+            case 'file':  // 文件
+                $config = [
+                    'maxSize' => $this->config['fileMaxSize'],
+                    'allowFiles' => $this->config['fileAllowFiles'],
+                    'pathFormat' => $this->config['filePathFormat'],
+                ];
+                break;
+            default:
+                $config = [];
+                break;
+        }
+
+        $upload = new Uploader('imgFile', $config);
+        header('Content-type: text/html; charset=UTF-8');
+        //header('Content-type: application/json; charset=UTF-8');  // IE下可能出错, 怀疑火狐下批量上传失败, 也是这个原因
+        if($upload->stateInfo == 'SUCCESS'){
+            echo Json::encode([
+                'error' => 0,
+                'url' => $upload->fullName,
+                'title' => substr($upload->realName, 0, strripos($upload->realName, '.'))
+            ]);
+        }else{
+            echo Json::encode(['error' => 1, 'message' => $upload->stateInfo]);
+        }
+        exit();
+    }
+
+    /**
+     * 列出已上传的文件列表
+     */
+    private function actionList()
+    {
+        if(!in_array($this->dir, ['image', 'flash', 'media', 'file'])){
+            //echo "Invalid Directory name.";
+            echo '无效的目录名称。';
+            exit();
+        }
+
+        $rootPath = dirname(Yii::getAlias('@app')) . DIRECTORY_SEPARATOR . 'web';
+        $rootUrl = Yii::$app->request->hostInfo;
+        switch($this->dir){
+            case 'image':  // 图片
+                $rootPath .= $this->config['imageRootPath'];
+                $rootUrl .= $this->config['imageRootPath'];
+                break;
+            case 'flash':  // Flash
+                $rootPath .= $this->config['flashRootPath'];
+                $rootUrl .= $this->config['flashRootPath'];
+                break;
+            case 'media':  // 视音频
+                $rootPath .= $this->config['mediaRootPath'];
+                $rootUrl .= $this->config['mediaRootPath'];
+                break;
+            case 'file':  // 文件
+                $rootPath .= $this->config['fileRootPath'];
+                $rootUrl .= $this->config['fileRootPath'];
+                break;
+            default:
+                $rootPath = $rootUrl = '';
+                break;
+        }
+
+        if(!file_exists($rootPath)){
+            FileHelper::createDirectory($rootPath);
+        }
+
+        // 根据 path 参数, 设置各路径和 URL
+        $path = Yii::$app->request->get('path');
+        if(empty($path)){
+            $currentPath = realpath($rootPath) . '/';
+            $currentUrl = $rootUrl;
+            $currentDirPath = '';
+            $moveupDirPath = '';
+        }else{
+            $currentPath = realpath($rootPath) . '/' . $path;
+            $currentUrl = $rootUrl . $path;
+            $currentDirPath = $path;
+            $moveupDirPath = preg_replace('/(.*?)[^\/]+\/$/', '$1', $currentDirPath);
+        }
+
+        // 不允许使用'..'移动到上一级目录
+        if(preg_match('/\.\./', $currentPath)){
+            //echo 'Access is not allowed.';
+            echo '访问不被允许。';
+            exit;
+        }
+
+        // 如果最后一个字符不是'/'
+        if(!preg_match('/\/$/', $currentPath)){
+            //echo 'Parameter is not valid.';
+            echo '参数无效。';
+            exit;
+        }
+
+        // 目录不存在或不是目录
+        if(!file_exists($currentPath) || !is_dir($currentPath)){
+            //echo 'Directory does not exist.';
+            echo '目录不存在。';
+            exit;
+        }
+
+        // 遍历目录取得文件信息
+        $fileList = [];
+        if($handle = opendir($currentPath)){
+            $i = 0;
+            while(false !== ($filename = readdir($handle))){
+                if($filename{0} == '.') continue;
+                $file = $currentPath . $filename;
+                if(is_dir($file)){
+                    $fileList[$i]['is_dir'] = true;  // 是否文件夹
+                    $fileList[$i]['has_file'] = (count(scandir($file)) > 2);  // 文件夹是否包含文件
+                    $fileList[$i]['filesize'] = 0;  // 文件大小
+                    $fileList[$i]['is_photo'] = false;  // 是否是图片
+                    $fileList[$i]['filetype'] = '';  // 文件类别, 用扩展名判断
+                }else{
+                    $fileList[$i]['is_dir'] = false;
+                    $fileList[$i]['has_file'] = false;
+                    $fileList[$i]['filesize'] = filesize($file);  // 文件大小
+                    $fileList[$i]['dir_path'] = '';
+                    $fileExt = strtolower(pathinfo($file, PATHINFO_EXTENSION));  // 小写的扩展名
+                    $fileList[$i]['is_photo'] = in_array($fileExt, ['jpg', 'jpeg', 'png', 'gif', 'bmp']);  // 是否是图片
+                    $fileList[$i]['filetype'] = $fileExt;  // 文件类别, 用扩展名判断
+                }
+                $fileList[$i]['filename'] = $filename;  //文件名, 包含扩展名
+                $fileList[$i]['datetime'] = date('Y-m-d H:i:s', filemtime($file));  // 文件最后修改时间
+                $i++;
+            }
+            closedir($handle);
+        }
+
+        usort($fileList, [$this, 'cmp_func']);  //用 cmp_func() 函数对数组进行排序
+
+        header('Content-type: application/json; charset=UTF-8');
+        echo Json::encode([
+            'moveup_dir_path' => $moveupDirPath,    // 相对于根目录的上一级目录
+            'current_dir_path' => $currentDirPath,  // 相对于根目录的当前目录
+            'current_url' => $currentUrl,           // 当前目录的URL
+            'total_count' => count($fileList),      // 文件总数
+            'file_list' => $fileList                // 文件列表
+        ]);
+    }
+
+    /**
+     * 排序
+     * @param $a
+     * @param $b
+     * @return int
+     */
+    public function cmp_func($a, $b)
+    {
+        $order = strtolower(Yii::$app->request->get('order', 'name'));  // 排序形式, name or size or type
+
+        if($a['is_dir'] && !$b['is_dir']){
+            return -1;
+        }elseif(!$a['is_dir'] && $b['is_dir']){
+            return 1;
+        }else{
+            if($order == 'size'){
+                if($a['filesize'] > $b['filesize']){
+                    return 1;
+                }elseif($a['filesize'] < $b['filesize']){
+                    return -1;
+                }else{
+                    return 0;
+                }
+            }elseif($order == 'type'){
+                return strcmp($a['filetype'], $b['filetype']);
+            }else{
+                return strcmp($a['filename'], $b['filename']);
+            }
+        }
+    }
+}

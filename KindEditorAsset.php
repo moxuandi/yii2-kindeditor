@@ -9,7 +9,7 @@ use yii\web\AssetBundle;
  * @author  zhangmoxuan <1104984259@qq.com>
  * @link  http://www.zhangmoxuan.com
  * @QQ  1104984259
- * @Date  2017-7-15
+ * @Date  2017-12-23
  * @see http://kindeditor.net
  */
 class KindEditorAsset extends AssetBundle
