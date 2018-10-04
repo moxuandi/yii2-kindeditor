@@ -42,6 +42,7 @@ public function actions()
                 'thumbMode' => 'outbound',
                 'imageRootPath' => '/uploads/image/',
                 'rootPath' => dirname(Yii::$app->request->scriptFile),  // 入口文件目录
+                'rootUrl' => Yii::$app->request->hostInfo,  // 访问上传文件的url, 指向'rootPath'
             ],
         ],
     ];

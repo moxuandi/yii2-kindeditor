@@ -4,6 +4,9 @@
  * see [参考](http://fex.baidu.com/ueditor/#server-config)
  */
 return [
+    //'rootPath' => dirname(Yii::$app->request->scriptFile),  // 入口文件目录
+    //'rootUrl' => Yii::$app->request->hostInfo,  // 访问上传文件的url, 指向'rootPath'
+
     /* 上传图片{image}配置项 */
     'imageMaxSize' => 1*1024*1024,  // 上传大小限制, 单位B, 默认1MB, 注意修改服务器的大小限制
     'imageAllowFiles' => ['.png', '.jpg', '.jpeg', '.gif', '.bmp'],  // 允许上传的文件类型

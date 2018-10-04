@@ -130,8 +130,8 @@ class KindEditorUpload extends Action
             exit();
         }
 
-        $rootPath = dirname(Yii::getAlias('@app')) . DIRECTORY_SEPARATOR . 'web';
-        $rootUrl = Yii::$app->request->hostInfo;
+        $rootPath = ArrayHelper::getValue($this->config, 'rootPath', dirname(Yii::$app->request->scriptFile));
+        $rootUrl = ArrayHelper::getValue($this->config, 'rootUrl', Yii::$app->request->hostInfo);
         switch($this->dir){
             case 'image':  // 图片
                 $rootPath .= $this->config['imageRootPath'];
