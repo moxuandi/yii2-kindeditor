@@ -41,6 +41,7 @@ public function actions()
                 'thumbHeight' => 200,
                 'thumbMode' => 'outbound',
                 'imageRootPath' => '/uploads/image/',
+                'rootPath' => dirname(Yii::$app->request->scriptFile),  // 入口文件目录
             ],
         ],
     ];
@@ -110,6 +111,16 @@ $form->field($model, 'file')->widget('moxuandi\kindeditor\KindEditor', [
     //'name' => 'content',
     'value' => 'file.zip',
 ]);
+```
+
+上传根目录控制:
+```php
+// 前后和后台入口文件在统一位置, /web/index.php, /web/admin.php:
+'rootPath' => dirname(Yii::$app->request->scriptFile),  // 前后台相同
+        
+// 前后和后台入口文件在不同的位置, /web/index.php, /web/admin/index.php:
+'rootPath' => dirname(Yii::$app->request->scriptFile),  // 前台
+'rootPath' => dirname(dirname(Yii::$app->request->scriptFile)),  // 后台
 ```
 
 #### 单独调用`imageDialog`和`localImageDialog`插件时, 通过添加`dialogImage`参数, 可以独立控制缩略图大小等信息:

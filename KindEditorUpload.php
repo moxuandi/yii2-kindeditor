@@ -3,6 +3,7 @@ namespace moxuandi\kindeditor;
 
 use Yii;
 use yii\base\Action;
+use yii\helpers\ArrayHelper;
 use yii\helpers\FileHelper;
 use yii\helpers\Json;
 use moxuandi\helpers\Uploader;
@@ -100,6 +101,8 @@ class KindEditorUpload extends Action
                 $config = [];
                 break;
         }
+
+        $config['rootPath'] = ArrayHelper::getValue($this->config, 'rootPath', dirname(Yii::$app->request->scriptFile));
 
         $upload = new Uploader('imgFile', $config);
         header('Content-type: text/html; charset=UTF-8');
