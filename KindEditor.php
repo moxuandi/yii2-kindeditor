@@ -84,15 +84,15 @@ class KindEditor extends InputWidget
     public function run()
     {
         switch($this->editorType){
-            case 'colorPicker': $html = self::renderHtml('k_colorPicker', '打开取色器'); break;
-            case 'fileDialog': $html = self::renderHtml('k_fileDialog', '选择文件'); break;
-            case 'imageDialog': $html = self::renderHtml('k_imageDialog', '选择图片'); break;
-            case 'remoteImageDialog': $html = self::renderHtml('k_remoteImageDialog', '选择图片'); break;
-            case 'localImageDialog': $html = self::renderHtml('k_localImageDialog', '选择图片'); break;
-            case 'imageManager': $html = self::renderHtml('k_imageManager', '浏览服务器'); break;
-            case 'flashManager': $html = self::renderHtml('k_flashManager', '浏览服务器'); break;
-            case 'mediaManager': $html = self::renderHtml('k_mediaManager', '浏览服务器'); break;
-            case 'fileManager': $html = self::renderHtml('k_fileManager', '浏览服务器'); break;
+            case 'colorPicker': $html = self::renderHtml($this->id . '_colorPicker', '打开取色器'); break;
+            case 'fileDialog': $html = self::renderHtml($this->id . '_fileDialog', '选择文件'); break;
+            case 'imageDialog': $html = self::renderHtml($this->id . '_imageDialog', '选择图片'); break;
+            case 'remoteImageDialog': $html = self::renderHtml($this->id . '_remoteImageDialog', '选择图片'); break;
+            case 'localImageDialog': $html = self::renderHtml($this->id . '_localImageDialog', '选择图片'); break;
+            case 'imageManager': $html = self::renderHtml($this->id . '_imageManager', '浏览服务器'); break;
+            case 'flashManager': $html = self::renderHtml($this->id . '_flashManager', '浏览服务器'); break;
+            case 'mediaManager': $html = self::renderHtml($this->id . '_mediaManager', '浏览服务器'); break;
+            case 'fileManager': $html = self::renderHtml($this->id . '_fileManager', '浏览服务器'); break;
             //case 'uploadButton': break;
             //case 'multiImageDialog': break;
             default: $html = $this->hasModel() ? Html::activeTextarea($this->model, $this->attribute, ['id'=>$this->id]) : Html::textarea(empty($this->name) ? $this->id : $this->name, $this->value, ['id'=>$this->id]); break;
