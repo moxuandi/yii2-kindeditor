@@ -109,3 +109,18 @@ editorType: 定义编辑器的类型, 值有：
      fileManager: 浏览服务器(文件)
      multiImageDialog: 批量上传图片(未实现)
 ```
+
+
+`KindEditorUpload::actionList()`方法考虑使用以下方式响应:
+```
+$response = Yii::$app->response;
+$response->format = Response::FORMAT_JSON;
+$response->data = [
+    'moveup_dir_path' => $moveupDirPath,    // 相对于根目录的上一级目录
+    'current_dir_path' => $currentDirPath,  // 相对于根目录的当前目录
+    'current_url' => $currentUrl,           // 当前目录的URL
+    'total_count' => count($fileList),      // 文件总数
+    'file_list' => $fileList                // 文件列表
+];
+$response->send();
+```
