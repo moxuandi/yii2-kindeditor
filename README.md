@@ -9,7 +9,7 @@ KindEditor 使用 JavaScript 编写，可以无缝地与 Java、.NET、PHP、ASP
 使用 [composer](http://getcomposer.org/download/) 下载:
 ```
 # 2.x(yii >= 2.0.16):
-composer require moxuandi/yii2-kindeditor:"~2.0"
+composer require moxuandi/yii2-kindeditor:"~2.0.0"
 
 # 1.x(非重要Bug, 不再更新):
 composer require moxuandi/yii2-kindeditor:"~1.0"
@@ -30,13 +30,12 @@ public function actions()
 {
     return [
         'Kupload' => [
-            'class' => 'moxuandi\kindeditor\KindEditorAction',
+            'class' => 'moxuandi\kindeditor\UploaderAction',
             //可选参数, 参考 config.php
             'config' => [
+                'thumbStatus' => true,  // 生成缩略图
                 'thumbWidth' => 150,    // 缩略图宽度
                 'thumbHeight' => 100,   // 缩略图高度
-                'saveDatabase' => true,  // 保存上传信息到数据库
-                    // 使用前请导入'database'文件夹中的数据表'upload'和模型类'Upload'
             ],
         ],
     ];
@@ -50,46 +49,89 @@ $form->field($model, 'content')->widget('moxuandi\kindeditor\KindEditor');
 
 2. 带参数调用:
 $form->field($model, 'content')->widget('moxuandi\kindeditor\KindEditor',[
-    'clientOptions' => [
-        'width' => '1000',
-        'height' => 500,
-    ],
+    'editorOptions' => ['width' => '1000', 'height' => 500],
 ]);
 
 3. 不带 $model 调用:
 \moxuandi\kindeditor\KindEditor::widget([
-    'clientOptions' => [
-        'width' => '1000',
-        'height' => 500,
-    ],
+    'editorOptions' => ['width' => '1000', 'height' => 500],
 ]);
 ```
 
-编辑器相关配置，请在`view`中配置，参数为`clientOptions`，比如定制菜单，编辑器大小等等，具体参数请查看[KindEditor官网文档](http://kindeditor.net/docs/option.html)
+编辑器相关配置，请在`view`中配置，参数为`editorOptions`，比如定制菜单，编辑器大小等等，具体参数请查看[KindEditor官网文档](http://kindeditor.net/docs/option.html)
 
 
-#### 单独调用插件(model版):
+#### 单独调用插件:
 ```php
 $form->field($model, 'imgurl')->widget('moxuandi\kindeditor\KindEditor', [
     'editorType' => 'imageDialog',
-    'inputOptions' => [  //input输入域的html属性
+    'options' => [  // input输入域的html属性
+        'class' => 'form-control',
+        'style' => 'display:inline-block;width:calc(100% - 84px);margin-right:6px;',
+    ],
+    'buttonOptions' => [  // 按钮的html属性
+        'class' => 'btn btn-default',
+    ],
+]);
+
+\moxuandi\kindeditor\KindEditor::widget([
+    'editorType' => 'imageDialog',
+    'options' => [  // input输入域的html属性
+        'class' => 'form-control',
         'style' => 'display:inline-block;width:calc(100% - 84px);margin-right:6px;'
     ],
-    'buttonOptions' => [  //按钮的html属性
-        'class' => 'btn btn-default',
+    'buttonOptions' => [  // 按钮的html属性
+        'class' => 'btn btn-default'
     ],
 ]);
 ```
 
-#### 单独调用插件(无model版):
+#### 同时调用编辑器和独立插件，并且图片/文件上传不一样时：
 ```php
-\moxuandi\kindeditor\KindEditor::widget([
+Controller:
+public function actions()
+{
+    return [
+        'Kupload' => [
+            'class' => 'moxuandi\kindeditor\UploaderAction',
+        ],
+        'Kupload2' => [
+            'class' => 'moxuandi\kindeditor\UploaderAction',
+            //可选参数, 参考 config.php
+            'config' => [
+                'thumbStatus' => true,  // 生成缩略图
+                'thumbWidth' => 150,    // 缩略图宽度
+                'thumbHeight' => 100,   // 缩略图高度
+            ],
+        ],
+        'Kupload3' => [
+            'class' => 'moxuandi\kindeditor\UploaderAction',
+            //可选参数, 参考 config.php
+            'config' => [
+                'filePathFormat' => '/uploads/file/{yyyy}{mm}{dd}/{hh}{ii}{ss}_{rand:6}',  // 文件保存路径
+                'fileRootPath' => '/uploads/file/',  // 浏览服务器时的根目录
+            ],
+        ],
+    ];
+}
+
+view:
+1. 编辑器(不生成缩略图)
+$form->field($model, 'content')->widget('moxuandi\kindeditor\KindEditor');
+2. 图片上传(生成缩略图)
+$form->field($model, 'imgurl')->widget('moxuandi\kindeditor\KindEditor', [
     'editorType' => 'imageDialog',
-    'inputOptions' => [  //input输入域的html属性
-        'style' => 'display:inline-block;width:calc(100% - 84px);margin-right:6px;'
+    'editorOptions' => [
+        'uploadJson' => Url::to(['Kupload2', 'action'=>'uploadJson']),  // 指定上传文件的服务器端程序
+        'fileManagerJson' => Url::to(['Kupload2', 'action'=>'fileManagerJson']),  // 指定浏览远程图片的服务器端程序
     ],
-    'buttonOptions' => [  //按钮的html属性
-        'class' => 'btn btn-default'
+]);
+3. 文件上传
+$form->field($model, 'imgurl')->widget('moxuandi\kindeditor\KindEditor', [
+    'editorType' => 'fileDialog',
+    'editorOptions' => [
+        'uploadJson' => Url::to(['Kupload3', 'action'=>'uploadJson']),  // 指定上传文件的服务器端程序
+        'fileManagerJson' => Url::to(['Kupload3', 'action'=>'fileManagerJson']),  // 指定浏览远程图片的服务器端程序
     ],
 ]);
 ```
@@ -108,19 +150,4 @@ editorType: 定义编辑器的类型, 值有：
      mediaManager: 浏览服务器(视音频)
      fileManager: 浏览服务器(文件)
      multiImageDialog: 批量上传图片(未实现)
-```
-
-
-`KindEditorUpload::actionList()`方法考虑使用以下方式响应:
-```
-$response = Yii::$app->response;
-$response->format = Response::FORMAT_JSON;
-$response->data = [
-    'moveup_dir_path' => $moveupDirPath,    // 相对于根目录的上一级目录
-    'current_dir_path' => $currentDirPath,  // 相对于根目录的当前目录
-    'current_url' => $currentUrl,           // 当前目录的URL
-    'total_count' => count($fileList),      // 文件总数
-    'file_list' => $fileList                // 文件列表
-];
-$response->send();
 ```
