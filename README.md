@@ -54,6 +54,7 @@ $form->field($model, 'content')->widget('moxuandi\kindeditor\KindEditor',[
 
 3. 不带 $model 调用:
 \moxuandi\kindeditor\KindEditor::widget([
+    'name' => 'image',
     'editorOptions' => ['width' => '1000', 'height' => 500],
 ]);
 ```
@@ -75,6 +76,7 @@ $form->field($model, 'imgurl')->widget('moxuandi\kindeditor\KindEditor', [
 ]);
 
 \moxuandi\kindeditor\KindEditor::widget([
+    'name' => 'image',
     'editorType' => 'imageDialog',
     'options' => [  // input输入域的html属性
         'class' => 'form-control',
