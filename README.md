@@ -36,6 +36,10 @@ public function actions()
                 'thumbStatus' => true,  // 生成缩略图
                 'thumbWidth' => 150,    // 缩略图宽度
                 'thumbHeight' => 100,   // 缩略图高度
+
+                // 如果`uploads`目录与当前应用的入口文件不在同一个目录, 必须做如下配置:
+                'rootPath' => dirname(dirname(Yii::$app->request->scriptFile)),
+                'rootUrl' => 'http://image.advanced.ccc',
             ],
         ],
     ];
