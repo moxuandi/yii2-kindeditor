@@ -53,6 +53,9 @@ class KindEditor extends InputWidget
     public $buttonOptions = ['class' => 'btn btn-default'];
 
 
+    /**
+     * @throws \yii\base\InvalidConfigException
+     */
     public function init()
     {
         parent::init();

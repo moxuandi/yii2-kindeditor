@@ -15,15 +15,12 @@ use yii\web\AssetBundle;
 class KindEditorAsset extends AssetBundle
 {
     public $sourcePath = '@vendor/moxuandi/yii2-kindeditor/assets';
-
     public $css = [
         'themes/default/default.css'
     ];
-
     public $js = [
         'kindeditor-all-min.js'
     ];
-
     public $depends = [
         'yii\web\JqueryAsset'
     ];
