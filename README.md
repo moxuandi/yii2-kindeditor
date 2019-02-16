@@ -157,3 +157,16 @@ editorType: 定义编辑器的类型, 值有：
      fileManager: 浏览服务器(文件)
      multiImageDialog: 批量上传图片(未实现)
 ```
+
+## 可视化图片上传:
+```
+$form->field($model, 'imgurl')->widget('moxuandi\kindeditor\KindEditorImage', [
+    'editorType' => 'imageDialog',
+]);
+
+\moxuandi\kindeditor\KindEditorImage::widget([
+    'name' => 'image',
+    'value' => '/uploads/image/20190216/111632_184320.jpg',
+    'editorType' => 'remoteImageDialog',
+]);
+```
