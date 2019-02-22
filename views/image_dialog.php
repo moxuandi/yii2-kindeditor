@@ -31,7 +31,7 @@ $css = '.hidden{display:none!important}
 .image_dialog{width:100%;display:block;clip:auto;background:#fff}
 .image_dialog .placeholder{margin:5px;border:2px dashed #e6e6e6;height:200px;padding-top:100px;text-align:center;background:url(images/image.png) center 20px no-repeat;color:#ccc;font-size:18px;position:relative}
 .image_dialog .btn-list .btn,.image_dialog .placeholder .btn{font-size:18px;line-height:1.5;padding:6px 20px}
-.image_dialog .img-show{float:left;max-width:200px;max-height:200px;margin:5px;padding:5px;border:2px dashed #e6e6e6}
+.image_dialog .img-show{float:left;max-width:400px;max-height:200px;margin:5px;padding:5px;border:2px dashed #e6e6e6}
 .image_dialog .btn-list{float:left;padding:5px}
 .image_dialog .btn-list .btn{float:left;margin-bottom:10px}';
 $this->registerCss($css);
