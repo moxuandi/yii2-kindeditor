@@ -65,7 +65,7 @@ class KindEditor extends InputWidget
             'allowFileManager' => true,  // 显示浏览远程服务器按钮
             'uploadJson' => Url::to(['Kupload', 'action'=>'uploadJson']),  // 指定上传文件的服务器端程序
             'fileManagerJson' => Url::to(['Kupload', 'action'=>'fileManagerJson']),  // 指定浏览远程图片的服务器端程序
-            'width' => 700,
+            'width' => '100%',
             'height' => 300,
         ], $this->editorOptions);
     }
