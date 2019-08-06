@@ -5,7 +5,6 @@ use Yii;
 use yii\base\Action;
 use yii\helpers\ArrayHelper;
 use yii\helpers\FileHelper;
-use yii\helpers\Json;
 use yii\web\Response;
 use moxuandi\helpers\Uploader;
 
@@ -99,18 +98,23 @@ class UploaderAction extends Action
 
         // 生成上传实例对象并完成上传, 返回结果数据
         $upload = new Uploader('imgFile', $config);
-        header('Content-type: text/html; charset=UTF-8');
-        //header('Content-type: application/json; charset=UTF-8');  // IE下可能出错, 怀疑火狐下批量上传失败, 也是这个原因
+
+        // 输出响应结果
+        $response = Yii::$app->response;
+        $response->format = Response::FORMAT_JSON;
         if($upload->stateInfo == 'SUCCESS'){
-            echo Json::encode([
+            $response->data = [
                 'error' => 0,
                 'url' => $upload->fullName,
-                'title' => substr($upload->realName, 0, strripos($upload->realName, '.'))
-            ]);
+                'title' => substr($upload->realName, 0, strripos($upload->realName, '.')),
+            ];
         }else{
-            echo Json::encode(['error' => 1, 'message' => $upload->stateInfo]);
+            $response->data = [
+                'error' => 1,
+                'message' => $upload->stateInfo,
+            ];
         }
-        exit();
+        $response->send();
     }
 
     /**
@@ -217,7 +221,11 @@ class UploaderAction extends Action
             }
             closedir($handle);
         }
-        usort($fileList, [$this, 'cmp_func']);  //用 cmp_func() 函数对数组进行排序
+
+        //用 cmp_func() 函数对数组进行排序
+        usort($fileList, [$this, 'cmp_func']);
+
+        // 输出响应结果
         $response = Yii::$app->response;
         $response->format = Response::FORMAT_JSON;
         $response->data = [
