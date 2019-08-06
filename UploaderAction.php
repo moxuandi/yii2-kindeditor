@@ -3,6 +3,8 @@ namespace moxuandi\kindeditor;
 
 use Yii;
 use yii\base\Action;
+use yii\base\Exception;
+use yii\base\ErrorException;
 use yii\helpers\ArrayHelper;
 use yii\helpers\FileHelper;
 use yii\web\Response;
@@ -34,8 +36,8 @@ class UploaderAction extends Action
     }
 
     /**
-     * @throws \yii\base\ErrorException
-     * @throws \yii\base\Exception
+     * @throws ErrorException
+     * @throws Exception
      */
     public function run()
     {
@@ -50,8 +52,8 @@ class UploaderAction extends Action
     /**
      * 处理上传
      * @param string $dir
-     * @throws \yii\base\ErrorException
-     * @throws \yii\base\Exception
+     * @throws ErrorException
+     * @throws Exception
      */
     private function actionUpload($dir)
     {
@@ -61,10 +63,12 @@ class UploaderAction extends Action
                     'maxSize' => $this->config['imageMaxSize'],
                     'allowFiles' => $this->config['imageAllowFiles'],
                     'pathFormat' => $this->config['imagePathFormat'],
-                    'thumbStatus' => $this->config['thumbStatus'],
-                    'thumbWidth' => $this->config['thumbWidth'],
-                    'thumbHeight' => $this->config['thumbHeight'],
-                    'thumbMode' => $this->config['thumbMode'],
+                    'thumb' => ArrayHelper::getValue($this->config, 'thumb', false),
+                    'crop' => ArrayHelper::getValue($this->config, 'crop', false),
+                    'frame' => ArrayHelper::getValue($this->config, 'frame', false),
+                    'watermark' => ArrayHelper::getValue($this->config, 'watermark', false),
+                    'text' => ArrayHelper::getValue($this->config, 'text', false),
+                    'resize' => ArrayHelper::getValue($this->config, 'resize', false),
                 ];
                 break;
             case 'flash':  // Flash
@@ -120,7 +124,7 @@ class UploaderAction extends Action
     /**
      * 列出已上传的文件列表
      * @param string $dir
-     * @throws \yii\base\Exception
+     * @throws Exception
      */
     private function actionList($dir)
     {
@@ -240,8 +244,8 @@ class UploaderAction extends Action
 
     /**
      * 排序
-     * @param $a
-     * @param $b
+     * @param array $a
+     * @param array $b
      * @return int
      */
     public function cmp_func($a, $b)

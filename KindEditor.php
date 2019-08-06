@@ -1,6 +1,7 @@
 <?php
 namespace moxuandi\kindeditor;
 
+use yii\base\InvalidConfigException;
 use yii\helpers\ArrayHelper;
 use yii\helpers\Html;
 use yii\helpers\Json;
@@ -54,7 +55,7 @@ class KindEditor extends InputWidget
 
 
     /**
-     * @throws \yii\base\InvalidConfigException
+     * @throws InvalidConfigException
      */
     public function init()
     {

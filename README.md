@@ -9,6 +9,7 @@ KindEditor 使用 JavaScript 编写，可以无缝地与 Java、.NET、PHP、ASP
 使用 [composer](http://getcomposer.org/download/) 下载:
 ```
 # 2.x(yii >= 2.0.16):
+composer require moxuandi/yii2-kindeditor:"~2.1.0"
 composer require moxuandi/yii2-kindeditor:"~2.0.0"
 
 # 1.x(非重要Bug, 不再更新):
@@ -33,9 +34,9 @@ public function actions()
             'class' => 'moxuandi\kindeditor\UploaderAction',
             //可选参数, 参考 config.php
             'config' => [
-                'thumbStatus' => true,  // 生成缩略图
-                'thumbWidth' => 150,    // 缩略图宽度
-                'thumbHeight' => 100,   // 缩略图高度
+                'imageMaxSize' => 1*1024*1024,  // 上传大小限制, 单位B, 默认1MB, 注意修改服务器的大小限制
+                'imageAllowFiles' => ['.png', '.jpg', '.jpeg', '.gif', '.bmp'],  // 允许上传的文件类型
+                'imagePathFormat' => '/uploads/image/{yyyy}{mm}{dd}/{hh}{ii}{ss}_{rand:6}',  // 文件保存路径
 
                 // 如果`uploads`目录与当前应用的入口文件不在同一个目录, 必须做如下配置:
                 'rootPath' => dirname(dirname(Yii::$app->request->scriptFile)),
@@ -105,9 +106,11 @@ public function actions()
             'class' => 'moxuandi\kindeditor\UploaderAction',
             //可选参数, 参考 config.php
             'config' => [
-                'thumbStatus' => true,  // 生成缩略图
-                'thumbWidth' => 150,    // 缩略图宽度
-                'thumbHeight' => 100,   // 缩略图高度
+                 // 生成缩略图
+                'thumb' => [
+                    'width' => 150,  // 缩略图宽度
+                    'height' => 100, // 缩略图高度
+                ],
             ],
         ],
         'Kupload3' => [
@@ -169,4 +172,27 @@ $form->field($model, 'imgurl')->widget('moxuandi\kindeditor\KindEditorImage', [
     'value' => '/uploads/image/20190216/111632_184320.jpg',
     'editorType' => 'remoteImageDialog',
 ]);
+```
+
+另可配置缩略图,裁剪图,水印等, 对图片做进一步处理; 详细配置请参考[moxuandi\helpers\Uploader](https://github.com/moxuandi/yii2-helpers)
+```php
+'config' => [
+    // 缩略图
+    'thumb' => ['width' => 100],
+
+    // 裁剪图像
+    'crop' => ['width' => 100],
+
+    // 添加边框
+    'frame' => ['margin' => 20],
+
+    // 添加图片水印
+    'watermark' => ['watermarkImage' => 'water.png'],
+
+    // 添加文字水印
+    'text' => ['text' => '水印文字'],
+
+    // 调整图片大小
+    'resize' => ['width' => 100],
+],
 ```

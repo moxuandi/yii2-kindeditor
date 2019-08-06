@@ -11,11 +11,8 @@ return [
     'imageMaxSize' => 1*1024*1024,  // 上传大小限制, 单位B, 默认1MB, 注意修改服务器的大小限制
     'imageAllowFiles' => ['.png', '.jpg', '.jpeg', '.gif', '.bmp'],  // 允许上传的文件类型
     'imagePathFormat' => '/uploads/image/{yyyy}{mm}{dd}/{hh}{ii}{ss}_{rand:6}',  // 文件保存路径
-    'thumbStatus' => false,  // 是否生成缩略图
-    'thumbWidth' => 300,  // 缩略图的宽度
-    'thumbHeight' => 200,  // 缩略图的高度
-    'thumbMode' => 'outbound',  // 生成缩略图的模式, 可用值: 'inset'(补白), 'outbound'(裁剪, 默认值).
     'imageRootPath' => '/uploads/image/',  // 浏览服务器时的根目录
+
 
     /* 上传{flash}配置项 */
     'flashMaxSize' => 2*1024*1024,  // 上传大小限制, 单位B, 默认2MB, 注意修改服务器的大小限制
