@@ -8,6 +8,9 @@ KindEditor 使用 JavaScript 编写，可以无缝地与 Java、.NET、PHP、ASP
 ------------
 使用 [composer](http://getcomposer.org/download/) 下载:
 ```
+# 2.2.x(yii >= 2.0.24):
+composer require moxuandi/yii2-kindeditor:"~2.2.0"
+
 # 2.x(yii >= 2.0.16):
 composer require moxuandi/yii2-kindeditor:"~2.1.0"
 composer require moxuandi/yii2-kindeditor:"~2.0.0"
