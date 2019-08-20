@@ -66,4 +66,4 @@ $('#{$wrapID} .btn-delete').on('click', function(){
     $('#{$wrapID} .placeholder').removeClass('hidden');
 });
 JS;
-$this->registerJs($script, $this::POS_END);
+$this->registerJs($script);
