@@ -109,10 +109,12 @@ public function actions()
             'class' => 'moxuandi\kindeditor\UploaderAction',
             //可选参数, 参考 config.php
             'config' => [
-                 // 生成缩略图
-                'thumb' => [
-                    'width' => 150,  // 缩略图宽度
-                    'height' => 100, // 缩略图高度
+                'process' => [
+                    // 生成缩略图
+                    'thumb' => [
+                        'width' => 150,  // 缩略图宽度
+                        'height' => 100, // 缩略图高度
+                    ],
                 ],
             ],
         ],
@@ -127,10 +129,11 @@ public function actions()
     ];
 }
 
-view:
-1. 编辑器(不生成缩略图)
+
+view1. 编辑器(不生成缩略图):
 $form->field($model, 'content')->widget('moxuandi\kindeditor\KindEditor');
-2. 图片上传(生成缩略图)
+
+view2. 图片上传(生成缩略图):
 $form->field($model, 'imgurl')->widget('moxuandi\kindeditor\KindEditor', [
     'editorType' => 'imageDialog',
     'editorOptions' => [
@@ -138,7 +141,8 @@ $form->field($model, 'imgurl')->widget('moxuandi\kindeditor\KindEditor', [
         'fileManagerJson' => Url::to(['Kupload2', 'action'=>'fileManagerJson']),  // 指定浏览远程图片的服务器端程序
     ],
 ]);
-3. 文件上传
+
+view3. 文件上传:
 $form->field($model, 'imgurl')->widget('moxuandi\kindeditor\KindEditor', [
     'editorType' => 'fileDialog',
     'editorOptions' => [
@@ -180,60 +184,56 @@ $form->field($model, 'imgurl')->widget('moxuandi\kindeditor\KindEditorImage', [
 另可配置缩略图,裁剪图,水印等, 对图片做进一步处理; 详细配置请参考[moxuandi\helpers\Uploader](https://github.com/moxuandi/yii2-helpers)
 ```php
 'config' => [
-    // 缩略图
-    'thumb' => [
-        'width' => 300,
-        'height' => 200,
-        //'mode' => 'outbound',  // 'inset'(补白), 'outbound'(裁剪, 默认值)
-        //'match' => ['image', 'thumb'],
-    ],
+    'process' => [
+        // 缩略图
+        'thumb' => [
+            'width' => 300,
+            'height' => 200,
+            //'mode' => 'outbound',  // 'inset'(补白), 'outbound'(裁剪, 默认值)
+        ],
 
-    // 裁剪图像
-    'crop' => [
-        'width' => 300,
-        'height' => 200,
-        //'top' => 0,
-        //'left' => 0,
-        //'match' => ['image', 'crop'],
-    ],
+        // 裁剪图像
+        'crop' => [
+            'width' => 300,
+            'height' => 200,
+            //'top' => 0,
+            //'left' => 0,
+        ],
 
-    // 添加边框
-    'frame' => [
-        'margin' => 20,
-        //'color' => '666',
-        //'alpha' => 100,
-        //'match' => ['image', 'frame'],
-    ],
+        // 添加边框
+        'frame' => [
+            'margin' => 20,
+            //'color' => '666',
+            //'alpha' => 100,
+        ],
 
-    // 添加图片水印
-    'watermark' => [
-        'watermarkImage' => '@web/uploads/watermark.png',
-        //'top' => 0,
-        //'left' => 0,
-        //'match' => ['image', 'watermark'],
-    ],
+        // 添加图片水印
+        'watermark' => [
+            'watermarkImage' => '@web/uploads/watermark.png',
+            //'top' => 0,
+            //'left' => 0,
+        ],
 
-    // 添加文字水印
-    'text' => [
-        'text' => '水印文字',
-        'fontFile' => '@web/uploads/simhei.ttf',  // 字体文件的位置
-        /*'fontOptions' => [
-            'size' => 12,
-            'color' => 'fff',
-            'angle' => 0,
-        ],*/
-        //'top' => 0,
-        //'left' => 0,
-        //'match' => ['image', 'text'],
-    ],
+        // 添加文字水印
+        'text' => [
+            'text' => '水印文字',
+            'fontFile' => '@web/uploads/simhei.ttf',  // 字体文件的位置
+            /*'fontOptions' => [
+                'size' => 12,
+                'color' => 'fff',
+                'angle' => 0,
+            ],*/
+            //'top' => 0,
+            //'left' => 0,
+        ],
 
-    // 调整图片大小
-    'resize' => [
-        'width' => 300,
-        'height' => 200,
-        //'keepAspectRatio' => true,  // 是否保持图片纵横比
-        //'allowUpscaling' => false,  // 如果原图很小, 图片是否放大
-        //'match' => ['image', 'resize'],
+        // 调整图片大小
+        'resize' => [
+            'width' => 300,
+            'height' => 200,
+            //'keepAspectRatio' => true,  // 是否保持图片纵横比
+            //'allowUpscaling' => false,  // 如果原图很小, 图片是否放大
+        ],
     ],
 ],
 ```

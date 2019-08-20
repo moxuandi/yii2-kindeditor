@@ -63,12 +63,7 @@ class UploaderAction extends Action
                     'maxSize' => $this->config['imageMaxSize'],
                     'allowFiles' => $this->config['imageAllowFiles'],
                     'pathFormat' => $this->config['imagePathFormat'],
-                    'thumb' => ArrayHelper::getValue($this->config, 'thumb', false),
-                    'crop' => ArrayHelper::getValue($this->config, 'crop', false),
-                    'frame' => ArrayHelper::getValue($this->config, 'frame', false),
-                    'watermark' => ArrayHelper::getValue($this->config, 'watermark', false),
-                    'text' => ArrayHelper::getValue($this->config, 'text', false),
-                    'resize' => ArrayHelper::getValue($this->config, 'resize', false),
+                    'process' => ArrayHelper::getValue($this->config, 'process', false),
                 ];
                 break;
             case 'flash':  // Flash
