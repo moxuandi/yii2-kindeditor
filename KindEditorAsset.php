@@ -16,10 +16,10 @@ class KindEditorAsset extends AssetBundle
 {
     public $sourcePath = '@vendor/moxuandi/yii2-kindeditor/assets';
     public $css = [
-        'themes/default/default.css'
+        'dist/themes/default/default.css'
     ];
     public $js = [
-        'kindeditor-all-min.js'
+        'dist/kindeditor-all-min.js'
     ];
     public $depends = [
         'yii\web\JqueryAsset'
