@@ -102,7 +102,7 @@ class UploaderAction extends Action
         if($upload->status){
             $response->data = [
                 'error' => 1,
-                'errMsg' => Uploader::$stateMap[$upload->status],
+                'message' => Uploader::$stateMap[$upload->status],
             ];
         }else{
             $response->data = [
