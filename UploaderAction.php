@@ -4,7 +4,6 @@ namespace moxuandi\kindeditor;
 use Yii;
 use yii\base\Action;
 use yii\base\Exception;
-use yii\base\ErrorException;
 use yii\helpers\ArrayHelper;
 use yii\helpers\FileHelper;
 use yii\web\Response;
@@ -36,15 +35,14 @@ class UploaderAction extends Action
     }
 
     /**
-     * @throws ErrorException
      * @throws Exception
      */
     public function run()
     {
         $request = Yii::$app->request;
         switch($request->get('action')){
-            case 'fileManagerJson': self::actionList($request->get('dir')); break;
-            case 'uploadJson': self::actionUpload($request->get('dir')); break;
+            case 'fileManagerJson': $this->actionList($request->get('dir')); break;
+            case 'uploadJson': $this->actionUpload($request->get('dir')); break;
             default: break;
         }
     }
@@ -52,10 +50,9 @@ class UploaderAction extends Action
     /**
      * 处理上传
      * @param string $dir
-     * @throws ErrorException
      * @throws Exception
      */
-    private function actionUpload($dir)
+    public function actionUpload($dir)
     {
         switch($dir){
             case 'image':  // 图片
@@ -102,16 +99,16 @@ class UploaderAction extends Action
         // 输出响应结果
         $response = Yii::$app->response;
         $response->format = Response::FORMAT_JSON;
-        if($upload->stateInfo == 'SUCCESS'){
+        if($upload->status){
+            $response->data = [
+                'error' => 1,
+                'errMsg' => Uploader::$stateMap[$upload->status],
+            ];
+        }else{
             $response->data = [
                 'error' => 0,
                 'url' => $upload->fullName,
                 'title' => substr($upload->realName, 0, strripos($upload->realName, '.')),
-            ];
-        }else{
-            $response->data = [
-                'error' => 1,
-                'message' => $upload->stateInfo,
             ];
         }
         $response->send();
@@ -122,7 +119,7 @@ class UploaderAction extends Action
      * @param string $dir
      * @throws Exception
      */
-    private function actionList($dir)
+    public function actionList($dir)
     {
         if(!in_array($dir, ['image', 'flash', 'media', 'file'])){
             //echo "Invalid Directory name.";

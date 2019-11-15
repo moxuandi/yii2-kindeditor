@@ -73,21 +73,21 @@ class KindEditor extends InputWidget
     public function run()
     {
         switch($this->editorType){
-            case 'colorPicker': $html = self::renderHtml($this->id . '_colorPicker', '打开取色器'); break;
-            case 'fileDialog': $html = self::renderHtml($this->id . '_fileDialog', '选择文件'); break;
-            case 'imageDialog': $html = self::renderHtml($this->id . '_imageDialog', '选择图片'); break;
-            case 'remoteImageDialog': $html = self::renderHtml($this->id . '_remoteImageDialog', '选择图片'); break;
-            case 'localImageDialog': $html = self::renderHtml($this->id . '_localImageDialog', '选择图片'); break;
-            case 'imageManager': $html = self::renderHtml($this->id . '_imageManager', '浏览服务器'); break;
-            case 'flashManager': $html = self::renderHtml($this->id . '_flashManager', '浏览服务器'); break;
-            case 'mediaManager': $html = self::renderHtml($this->id . '_mediaManager', '浏览服务器'); break;
-            case 'fileManager': $html = self::renderHtml($this->id . '_fileManager', '浏览服务器'); break;
+            case 'colorPicker': $html = $this->renderHtml($this->id . '_colorPicker', '打开取色器'); break;
+            case 'fileDialog': $html = $this->renderHtml($this->id . '_fileDialog', '选择文件'); break;
+            case 'imageDialog': $html = $this->renderHtml($this->id . '_imageDialog', '选择图片'); break;
+            case 'remoteImageDialog': $html = $this->renderHtml($this->id . '_remoteImageDialog', '选择图片'); break;
+            case 'localImageDialog': $html = $this->renderHtml($this->id . '_localImageDialog', '选择图片'); break;
+            case 'imageManager': $html = $this->renderHtml($this->id . '_imageManager', '浏览服务器'); break;
+            case 'flashManager': $html = $this->renderHtml($this->id . '_flashManager', '浏览服务器'); break;
+            case 'mediaManager': $html = $this->renderHtml($this->id . '_mediaManager', '浏览服务器'); break;
+            case 'fileManager': $html = $this->renderHtml($this->id . '_fileManager', '浏览服务器'); break;
             //case 'uploadButton': break;
             //case 'multiImageDialog': break;
             default: $html = $this->hasModel() ? Html::activeTextarea($this->model, $this->attribute, $this->options) : Html::textarea($this->name, $this->value, $this->options); break;
         }
 
-        self::registerScript();  // 放在最后, 是为了可以自定义 $this->buttonOptions['id']
+        $this->registerScript();  // 放在最后, 是为了可以自定义 $this->buttonOptions['id']
         return $html;
     }
 
@@ -97,7 +97,7 @@ class KindEditor extends InputWidget
      * @param string $buttonLabel button 按钮的文本内容(不是 label 属性)
      * @return mixed 渲染的 HTML.
      */
-    protected function renderHtml($buttonID, $buttonLabel)
+    public function renderHtml($buttonID, $buttonLabel)
     {
         $this->buttonOptions = array_merge(['id' => $buttonID], $this->buttonOptions);
         $buttonLabel = ArrayHelper::remove($this->buttonOptions, 'label', $buttonLabel);
@@ -111,7 +111,7 @@ class KindEditor extends InputWidget
     /**
      * 注册客户端脚本
      */
-    protected function registerScript()
+    public function registerScript()
     {
         KindEditorAsset::register($this->view);
         $buttonID = ArrayHelper::getValue($this->buttonOptions, 'id');
