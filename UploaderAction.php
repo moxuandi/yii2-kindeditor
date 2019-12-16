@@ -195,7 +195,7 @@ class UploaderAction extends Action
         if($handle = opendir($currentPath)){
             $i = 0;
             while(false !== ($filename = readdir($handle))){
-                if($filename{0} == '.') continue;
+                if($filename[0] == '.') continue;
                 $file = $currentPath . $filename;
                 if(is_dir($file)){
                     $fileList[$i]['is_dir'] = true;  // 是否文件夹
