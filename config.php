@@ -8,21 +8,18 @@ return [
     //'rootUrl' => Yii::$app->request->hostInfo,  // 访问上传文件的url, 指向'rootPath'
 
     /* 上传图片{image}配置项 */
-    'imageMaxSize' => 1*1024*1024,  // 上传大小限制, 单位B, 默认1MB, 注意修改服务器的大小限制
     'imageAllowFiles' => ['.png', '.jpg', '.jpeg', '.gif', '.bmp'],  // 允许上传的文件类型
     'imagePathFormat' => '/uploads/image/{yyyy}{mm}{dd}/{hh}{ii}{ss}_{rand:6}',  // 文件保存路径
     'imageRootPath' => '/uploads/image/',  // 浏览服务器时的根目录
 
 
     /* 上传{flash}配置项 */
-    'flashMaxSize' => 2*1024*1024,  // 上传大小限制, 单位B, 默认2MB, 注意修改服务器的大小限制
     'flashAllowFiles' => ['.flv', '.swf'],  // 允许上传的文件类型
     'flashPathFormat' => '/uploads/flash/{yyyy}{mm}{dd}/{hh}{ii}{ss}_{rand:6}',  // 文件保存路径
     'flashRootPath' => '/uploads/flash/',  // 浏览服务器时的根目录
 
 
     /* 上传音频{media}配置项 */
-    'mediaMaxSize' => 10*1024*1024,  // 上传大小限制, 单位B, 默认10MB, 注意修改服务器的大小限制
     'mediaAllowFiles' => [  // 允许上传的文件类型
         '.flv', '.swf', '.mkv', '.avi', '.rm', '.rmvb', '.mpeg', '.mpg',
         '.ogg', '.ogv', '.mov', '.wmv', '.mp4', '.webm', '.mp3', '.wav', '.mid'
@@ -32,7 +29,6 @@ return [
 
 
     /* 上传文件{file}配置项 */
-    'fileMaxSize' => 10*1024*1024,  // 上传大小限制, 单位B, 默认10MB, 注意修改服务器的大小限制
     'fileAllowFiles' => [  // 允许上传的文件类型
         '.png', '.jpg', '.jpeg', '.gif', '.bmp',
         '.flv', '.swf', '.mkv', '.avi', '.rm', '.rmvb', '.mpeg', '.mpg',

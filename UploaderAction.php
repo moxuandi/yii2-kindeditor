@@ -57,7 +57,6 @@ class UploaderAction extends Action
         switch($dir){
             case 'image':  // 图片
                 $config = [
-                    'maxSize' => $this->config['imageMaxSize'],
                     'allowFiles' => $this->config['imageAllowFiles'],
                     'pathFormat' => $this->config['imagePathFormat'],
                     'process' => ArrayHelper::getValue($this->config, 'process', false),
@@ -65,21 +64,18 @@ class UploaderAction extends Action
                 break;
             case 'flash':  // Flash
                 $config = [
-                    'maxSize' => $this->config['flashMaxSize'],
                     'allowFiles' => $this->config['flashAllowFiles'],
                     'pathFormat' => $this->config['flashPathFormat'],
                 ];
                 break;
             case 'media':  // 音频
                 $config = [
-                    'maxSize' => $this->config['mediaMaxSize'],
                     'allowFiles' => $this->config['mediaAllowFiles'],
                     'pathFormat' => $this->config['mediaPathFormat'],
                 ];
                 break;
             case 'file':  // 文件
                 $config = [
-                    'maxSize' => $this->config['fileMaxSize'],
                     'allowFiles' => $this->config['fileAllowFiles'],
                     'pathFormat' => $this->config['filePathFormat'],
                 ];
